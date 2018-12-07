@@ -1,0 +1,27 @@
+<h1>Event Binding Examples</h1>
+<br/>
+
+<h2>Button click</h2>
+<button type="button" (click)="onClickMe()">Click Me!</button>
+{{clickedMe}}
+
+<br/>
+<br/>
+
+<h2>Key up event</h2>
+<input type="text" (keyup)="onKey($event)" />
+{{values}}
+
+<br/>
+<br/>
+
+<h2>Template reference variable</h2>
+<input type="text" #tempVar (keyup)="0" />
+{{tempVar.value}}
+
+<h2>Key up event with template reference variable</h2>
+<input type="text" #keyUpTempVar (keyup)="ontempKeyUp(keyUpTempVar.value)" />
+{{values}}
+
+<br/>
+<br/>

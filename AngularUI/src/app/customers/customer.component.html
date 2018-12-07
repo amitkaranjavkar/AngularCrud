@@ -1,0 +1,131 @@
+<div-loader [isLoadingDisplayed]="isLoading"></div-loader>
+<div class="container well form-horizontal">
+    <h2>Customer List
+        <button class="btn btn-success btn-circle pull-right" (click)="addCustomer()" title="Add Customer" style="float:none !important">Add</button>
+    </h2>
+
+    <div class="alert-success">{{message}}</div>
+    <br/>
+    <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search by Name" aria-describedby="basic-addon1" style="margin-right: 6px"
+            [(ngModel)]="searchText" (keyup.enter)="searchCustomers()" (blur)="searchCustomers()">
+        <span class="input-group-btn">
+            <input type="button" value="Search" class="btn btn-success" (click)="searchCustomers()" />
+        </span>
+    </div>
+    <br/>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- <tr *ngFor="let cust of customers | customername:searchText"> -->
+            <tr *ngFor="let cust of pagedItems">
+                <td>
+                    <a href="/customer/{{cust.id}}">{{cust.id}}</a>
+                </td>
+                <td>{{cust.name}}</td>
+                <td>{{cust.address}}</td>
+                <td>{{cust.phone}}</td>
+                <td>
+                    <input type="button" class="btn btn-primary" value="Edit" (click)="editCustomer(cust.id)" />
+                    <input type="button" class="btn btn-danger" value="Delete" (click)="deleteCustomer(cust.id)" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <ul *ngIf="pager.pages && pager.pages.length" class="pagination">
+        <li [ngClass]="{disabled:pager.currentPage === 1}">
+            <a (click)="setPage(1)">First</a>
+        </li>
+        <li [ngClass]="{disabled:pager.currentPage === 1}">
+            <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+        </li>
+        <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+            <a (click)="setPage(page)">{{page}}</a>
+        </li>
+        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+            <a (click)="setPage(pager.currentPage + 1)">Next</a>
+        </li>
+        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+            <a (click)="setPage(pager.totalPages)">Last</a>
+        </li>
+    </ul>
+
+    <div class="backdrop" [ngStyle]="{'display':display}"></div>
+    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':display}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{popUpTitle}}</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="onCloseHandled();customerForm.reset();">
+                        <span aria-hidden="true" data-dismiss="modal">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form #customerForm="ngForm">
+                        <table class="table table-bordered" *ngIf="customer">
+                            <tr>
+                                <td>Name</td>
+                                <td>
+                                    <input type="text" name="customerName" class="form-control" [(ngModel)]="customer.name" required #customerName="ngModel"
+                                    />
+                                    <div style="margin-top:10px" class="alert-danger" *ngIf="customerName.errors && (customerName.dirty || customerName.touched)">
+                                        <div [hidden]="!customerName.errors.required">
+                                            Customer name is required
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Address</td>
+                                <td>
+                                    <input type="text" name="customerAddress" class="form-control" [(ngModel)]="customer.address" required #customerAddress="ngModel"
+                                    />
+                                    <div style="margin-top:10px" class="alert-danger" *ngIf="customerAddress.errors && (customerAddress.dirty || customerAddress.touched)">
+                                        <div [hidden]="!customerAddress.errors.required">
+                                            Address is required
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Phone</td>
+                                <td>
+                                    <input type="text" name="customerPhone" class="form-control" [(ngModel)]="customer.phone" required #customerPhone="ngModel"
+                                        pattern="[0-9]*" maxlength="10" minlength="10" />
+                                    <div style="margin-top:10px" class="alert-danger" *ngIf="customerPhone.errors && (customerPhone.dirty || customerPhone.touched)">
+                                        <div [hidden]="!customerPhone.errors.required">
+                                            Phone is required
+                                        </div>
+                                        <div [hidden]="!customerPhone.errors.pattern">
+                                            Only digits are allowed
+                                        </div>
+                                        <div [hidden]="!customerPhone.errors.minlength">
+                                            Minimum length is 10 digits
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <input type="button" class="btn btn-primary" value="{{buttonText}}" (click)="saveCustomer();customerForm.reset();" [disabled]="!customerForm.form.valid"
+                                     data-dismiss="modal"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" (click)="onCloseHandled();customerForm.reset();">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

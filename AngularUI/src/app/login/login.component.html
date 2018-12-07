@@ -1,0 +1,40 @@
+<div class="container">
+    <form [formGroup]="loginForm" class="well form-horizontal" (ngSubmit)="checkLogin(loginForm.value)">
+        <div style="margin-left: 25%; width: 41%" [hidden]="!isError">
+            <label class="col-md-4 control-label"></label>
+            <div class="alert alert-danger" role="alert" data-auto-dismiss="2000">
+                {{errorMessage}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-4 control-label">Username: </label>
+            <div class="col-md-4 inputGroupContainer">
+                <div class="input-group" [ngClass]="{'has-error' : !loginForm.controls['userName'].valid && loginForm.controls['userName'].touched}">
+                    <span class="input-group-addon">
+                        <i class="glyphicon glyphicon-user"></i>
+                    </span>
+                    <input type="text" id="txtUserName" class="form-control" [formControl]="loginForm.controls['userName']">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-4 control-label">Password: </label>
+            <div class="col-md-4 inputGroupContainer">
+                <div class="input-group" [ngClass]="{'has-error' : !loginForm.controls['password'].valid && loginForm.controls['password'].touched}">
+                    <span class="input-group-addon">
+                        <i class="glyphicon glyphicon-lock"></i>
+                    </span>
+                    <input type="text" id="txtPassword" type="password" class="form-control" [formControl]="loginForm.controls['password']">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-4 control-label"></label>
+            <div class="col-md-4 inputGroupContainer">
+                <div class="input-group">
+                    <input type="submit" id="btnLogin" class="btn btn-success" value="Login" [disabled]="!loginForm.valid" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
